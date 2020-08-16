@@ -21,18 +21,23 @@ end
 def self.scrape_profile_page(profile_url)
   doc = Nokogiri::HTML(open(profile_url))
   result = nil
+  scraped_student = {}
   doc.css(".main-wrapper.profile").each do |student|
-    social = student.css(".social-icon-container a").collect {|node| node.attr("href")}
+    social = student.css(".social-icon-container a").each do |node|
+      scraped_student[twitter:] = node.attr("href") if node.attr("href").include?("twitter")
+      scraped_student[linkedin:] = node.attr("href") if node.attr("href").include?("linkedin")
+      scraped_student[github:] = node.attr("href") if node.attr("href").include?("github")
+      scraped_student[blog:] = node.attr("href")
+      binding.pry
     quote = student.css(".vitals-text-container .profile-quote").collect {|node| node.text}
     bio = student.css(".details-container p").collect {|node| node.text}
-    scraped_student = {
+
     twitter: social[0],
     linkedin: social[1],
     github: social[2],
     blog: social[3],
     profile_quote: quote[0],
     bio: bio[0]
-  }
   # binding.pry
   result = scraped_student
   end
